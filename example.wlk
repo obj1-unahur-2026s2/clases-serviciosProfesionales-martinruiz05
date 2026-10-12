@@ -3,8 +3,8 @@ class Profesionales {
   method honorariosPorHora() {
 
   }
-  method provinciasEnLasQuePuedeEjercer(){
-
+  method provinciasEnLasQuePuedeEjercer() {
+    return []
   }
   method getUniversidadEnLaQueEstudiaron() {
     return universidadEnLaQueEstudiaron
@@ -70,12 +70,53 @@ class EmpresaDeServicios {
     return profesionalesContratados.filter({p=>p.honorariosPorHora() > honorarioDeReferencia})
   }
   method dondeEstudiaronLosProfesionales(){
-    return profesionalesContratados.map({p=>p.getUniversidadEnLaQueEstudiaron()}).distinct()
+    return profesionalesContratados.map({p=>p.getUniversidadEnLaQueEstudiaron()}).asSet()
   }
   method profesionalMasBarato(){
     return profesionalesContratados.min({p=>p.honorariosPorHora()})
   }
   method esDeGenteAcotada(){
     return profesionalesContratados.all({p=>p.provinciasEnLasQuePuedeEjercer().size() <= 3})
+  }
+  method getProfesionalesContratados(){
+    return profesionalesContratados
+  }
+}
+
+class Solicitantes {
+  method puedeSerAtendidoPor(profesional) {
+  }
+}
+
+class Personas inherits Solicitantes {
+  const provinciaEnLaQueReside
+  method provinciaEnLaQueReside() {
+    return provinciaEnLaQueReside
+  }
+  override method puedeSerAtendidoPor(profesional){
+    return profesional.provinciasEnLasQuePuedeEjercer().any({ provincia =>
+      provincia == self.provinciaEnLaQueReside()
+    })
+  }
+}
+
+class Institucion inherits Solicitantes{
+  const listaDeUniversidadesQueReconoce = []
+  override method puedeSerAtendidoPor(profesional) {
+  return listaDeUniversidadesQueReconoce.any({ universidad =>
+    universidad == profesional.getUniversidadEnLaQueEstudiaron()
+  })
+}
+
+}
+
+class Club inherits Solicitantes {
+  const provinciasEnLasQueEsta = []
+  override method puedeSerAtendidoPor(profesional) {
+    return profesional.provinciasEnLasQuePuedeEjercer().any({ provinciaDelProfesional =>
+      provinciasEnLasQueEsta.any({ provinciaDelClub =>
+        provinciaDelProfesional == provinciaDelClub
+      })
+    })
   }
 }

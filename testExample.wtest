@@ -1,9 +1,37 @@
-import example.pepita
+import example.*
 
-describe "group of tests for pepita" {
+describe "Univerisdades y Profesionales" {
+var universidadSanMartin
+var universidadRosario
+var universidadCorrientes
+var universidadHurlingham
+var juana
+var melina
+var rocio
+var luciana
+var empresaRandom
+method initialize(){
+  universidadSanMartin = new Universidad(provincia = "Buenos Aires",honorarioRecomendadoPorHora = 3500
+    )
+  universidadRosario = new Universidad(provincia = "Santa fe",honorarioRecomendadoPorHora = 2800)
+  universidadCorrientes = new Universidad(provincia = "Corrientes",honorarioRecomendadoPorHora = 4200)
+  universidadHurlingham = new Universidad(provincia = "Buenos Aires", honorarioRecomendadoPorHora = 8800)
+  juana = new ProfesionalesVinculadosAUniversidad(universidadEnLaQueEstudiaron = universidadRosario)
+  melina = new ProfesionalesAsociadosDelLitoral(universidadEnLaQueEstudiaron = universidadCorrientes)
+  rocio = new ProfesionalesLibres(universidadEnLaQueEstudiaron = universidadHurlingham, provinciasHabilitadas = ["Santa Fe","Cordoba","Buenos Aires"],tarifaPorHora = 5000)
+  luciana = new ProfesionalesLibres(universidadEnLaQueEstudiaron = universidadRosario,provinciasHabilitadas=["Santa Fe","Entre Rios"],tarifaPorHora=3200)
+  empresaRandom = new EmpresaDeServicios(honorarioDeReferencia = 3500 ,profesionalesContratados = [])
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+}
+  test "conserva la provincia y los honorarios"{
+    empresaRandom.contratarProfesional(juana)
+    empresaRandom.contratarProfesional(luciana)
+    empresaRandom.contratarProfesional(rocio)
+    empresaRandom.contratarProfesional(melina)
+    assert.equals(4, empresaRandom.getProfesionalesContratados().size())
+    assert.equals([rocio],empresaRandom.profesionalesCaros())
+    assert.equals(#{universidadRosario,universidadHurlingham,universidadCorrientes},empresaRandom.dondeEstudiaronLosProfesionales())
   }
+  
 
 }
